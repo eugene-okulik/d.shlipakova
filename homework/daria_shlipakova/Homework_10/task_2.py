@@ -1,16 +1,24 @@
 def repeat_me(func):
     def wrapper(*args, **kwargs):
         count = kwargs.pop('count', 1)
-        return [func(*args, **kwargs) for _ in range(count)]
+        final_result = []
+        for _ in range(count):
+            result = func(*args)
+            final_result.append(result)
+        return final_result
     return wrapper
 
 
 def repeat_me_2(num):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            return [func(*args, **kwargs) for _ in range(num)]
+    def repeat_me_2_dec(func):
+        def wrapper(*args):
+            final_result = []
+            for _ in range(num):
+                result = func(*args)
+                final_result.append(result)
+            return final_result
         return wrapper
-    return decorator
+    return repeat_me_2_dec
 
 
 @repeat_me
@@ -22,8 +30,8 @@ example('print me', count=4)
 
 
 @repeat_me_2(2)
-def example3(*args, **kwargs):
-    return args, kwargs
+def example3(*args):
+    return sum(x * 2 for x in args if x > 5)
 
 
-print(example3(1, 3, 4, kwarg=5))
+print(example3(2, 4, 6, 10))
